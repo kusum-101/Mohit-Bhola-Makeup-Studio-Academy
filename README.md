@@ -48,6 +48,14 @@ See [`.env.example`](.env.example). Every contact item is optional. **The UI onl
 | `VITE_STREET_ADDRESS`, `VITE_POSTAL_CODE`, `VITE_OPENING_HOURS` | Full address and hours table. Also added to the JSON-LD. |
 
 ### Enquiry form behaviour
+**WhatsApp-first:** when `VITE_WHATSAPP_NUMBER` is set, every enquiry goes to the studio's WhatsApp:
+- the form, the "Book now" / "Enrol" popups, the floating button and the top bar all lead there
+- after validation, the green **Send enquiry on WhatsApp** button opens WhatsApp (app on mobile, WhatsApp Web on desktop)
+- the chat is pre-filled with the visitor's name, phone, service, date and message
+- the visitor just taps Send; the site never claims it was sent, it asks them to tap Send
+
+Without a WhatsApp number, the form uses `VITE_ENQUIRY_ENDPOINT` as described below.
+
 1. Client-side validation:
    - name required
    - Indian mobile required (`+91` optional)

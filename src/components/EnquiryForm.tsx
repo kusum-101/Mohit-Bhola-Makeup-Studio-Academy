@@ -4,24 +4,32 @@ import { offerings } from '../data/offerings';
 import { InstagramIcon, WhatsAppIcon } from './Icons';
 import { validate, type EnquiryErrors as Errors, type EnquiryValues as Values } from '../lib/validate';
 
-type Status = 'idle' | 'submitting' | 'success' | 'error' | 'unconfigured';
+type Status = 'idle' | 'submitting' | 'success' | 'error' | 'unconfigured' | 'whatsapp';
+
+// WhatsApp is the primary enquiry channel whenever the studio's number is configured.
+const viaWhatsApp = Boolean(business.whatsapp);
 
 const empty: Values = { name: '', phone: '', email: '', interest: '', date: '', message: '', consent: false, company: '' };
 
 function summary(v: Values) {
   const interest = offerings.find((o) => o.id === v.interest)?.title ?? 'General enquiry';
+  const date = v.date ? new Date(v.date + 'T00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
   return [
-    `Hi ${business.name}!`,
+    `Hi ${business.name}! I'd like to enquire about *${interest}*.`,
+    '',
     `Name: ${v.name}`,
     `Phone: ${v.phone}`,
-    v.email && `Email: ${v.email}`,
-    `Interested in: ${interest}`,
-    v.date && `Preferred date: ${v.date}`,
-    v.message && `Message: ${v.message}`,
+    v.email ? `Email: ${v.email}` : null,
+    date ? `Event / preferred date: ${date}` : null,
+    v.message ? `Message: ${v.message}` : null,
+    '',
+    '(Sent from the website enquiry form)',
   ]
-    .filter(Boolean)
+    .filter((l) => l !== null)
     .join('\n');
 }
+
+export const whatsappUrl = (v: Values) => `https://wa.me/${business.whatsapp}?text=${encodeURIComponent(summary(v))}`;
 
 export function EnquiryForm({ initialInterest = '', compact = false }: { initialInterest?: string; compact?: boolean }) {
   const uid = useId();
@@ -49,6 +57,16 @@ export function EnquiryForm({ initialInterest = '', compact = false }: { initial
       return;
     }
     if (values.company) return; // honeypot: silently ignore bots
+    if (viaWhatsApp) {
+      // Must run synchronously inside the submit gesture so pop-up blockers allow it.
+      const url = whatsappUrl(values);
+      // ('noopener' would make window.open return null, so detach the opener manually.)
+      const win = window.open(url, '_blank');
+      if (win) win.opener = null;
+      else window.location.href = url; // pop-up blocked: open in this tab instead
+      setStatus('whatsapp');
+      return;
+    }
     if (!site.enquiryEndpoint) {
       setStatus('unconfigured');
       return;
@@ -163,8 +181,17 @@ export function EnquiryForm({ initialInterest = '', compact = false }: { initial
         {err('consent')}
       </div>
 
-      <button type="submit" className="btn btn-primary w-full" disabled={status === 'submitting'} aria-busy={status === 'submitting'}>
-        {status === 'submitting' ? (
+      <button
+        type="submit"
+        className={viaWhatsApp ? 'btn w-full bg-[#25D366] text-ink shadow-[0_10px_30px_-10px_rgb(37_211_102/0.7)] hover:-translate-y-0.5 hover:bg-[#1ebe5b]' : 'btn btn-primary w-full'}
+        disabled={status === 'submitting'}
+        aria-busy={status === 'submitting'}
+      >
+        {viaWhatsApp ? (
+          <>
+            <WhatsAppIcon /> Send enquiry on WhatsApp
+          </>
+        ) : status === 'submitting' ? (
           <>
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" /> Sending…
           </>
@@ -173,7 +200,20 @@ export function EnquiryForm({ initialInterest = '', compact = false }: { initial
         )}
       </button>
 
+      {viaWhatsApp && status === 'idle' && (
+        <p className="text-center text-xs text-muted">Opens WhatsApp with your details filled in. Just tap send.</p>
+      )}
+
       <div aria-live="polite">
+        {status === 'whatsapp' && (
+          <div role="status" className="rounded-xl border border-[#25D366]/50 bg-[#25D366]/10 p-4 text-sm text-ink">
+            <p className="font-semibold">WhatsApp has opened with your enquiry.</p>
+            <p className="mt-1 text-muted">Tap <strong>Send</strong> in WhatsApp to deliver it to the studio. Didn’t open?</p>
+            <a className="btn mt-3 min-h-10 bg-[#25D366] px-4 text-ink" href={whatsappUrl(values)} target="_blank" rel="noopener noreferrer">
+              <WhatsAppIcon /> Open WhatsApp again
+            </a>
+          </div>
+        )}
         {status === 'error' && (
           <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-800">
             Sorry, your enquiry couldn’t be sent. Please try again{links.whatsapp || business.instagram ? ' or message the studio directly' : ''}.
@@ -185,7 +225,7 @@ export function EnquiryForm({ initialInterest = '', compact = false }: { initial
             <p className="mt-1 text-muted">Please send them to the studio directly:</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {links.whatsapp && (
-                <a className="btn btn-primary min-h-10 px-4" href={`https://wa.me/${business.whatsapp}?text=${encodeURIComponent(summary(values))}`} target="_blank" rel="noopener noreferrer">
+                <a className="btn btn-primary min-h-10 px-4" href={whatsappUrl(values)} target="_blank" rel="noopener noreferrer">
                   <WhatsAppIcon /> Send on WhatsApp
                 </a>
               )}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { business, links } from '../data/business';
 import { useEnquiry } from '../lib/enquiry';
-import { CloseIcon, InstagramIcon, MenuIcon, PhoneIcon, PinIcon } from './Icons';
+import { CloseIcon, InstagramIcon, MenuIcon, PhoneIcon, PinIcon, WhatsAppIcon } from './Icons';
 import { Wordmark } from './Wordmark';
 
 export const NAV = [
@@ -40,6 +40,11 @@ export function Header() {
             <PinIcon width={14} height={14} /> Ghaziabad, Uttar Pradesh
           </a>
           <div className="flex items-center gap-5">
+            {links.whatsapp && (
+              <a href={links.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-gold-light">
+                <WhatsAppIcon width={14} height={14} /> <span className="hidden sm:inline">WhatsApp</span>
+              </a>
+            )}
             {links.tel && (
               <a href={links.tel} className="hidden items-center gap-1.5 hover:text-gold-light sm:flex">
                 <PhoneIcon width={14} height={14} /> {business.phone}

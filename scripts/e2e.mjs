@@ -1,7 +1,7 @@
 // Browser interaction tests via the Chrome DevTools Protocol (no extra dependencies).
 // Usage: start `npm run preview -- --port 4791` then
 //   CHROME_PATH="C:/Program Files/Google/Chrome/Application/chrome.exe" node scripts/e2e.mjs http://localhost:4791/ [expect]
-// expect = "unconfigured" (default, no VITE_ENQUIRY_ENDPOINT) | "success" | "error"
+// expect = "unconfigured" (default) | "success" | "error" | "whatsapp" (set E2E_WA to the VITE_WHATSAPP_NUMBER used for the build)
 import { spawn } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
@@ -77,7 +77,10 @@ const errCount = await js(`document.querySelectorAll('dialog[open] [aria-invalid
 check('empty submit flags required fields', errCount === 3, `${errCount} invalid (name, phone, consent)`);
 check('focus moved to first invalid field', (await js(`document.activeElement?.name`)) === 'name');
 
-// Valid submit
+// Valid submit (in WhatsApp mode, capture the URL instead of opening a real window)
+if (expect === 'whatsapp') {
+  await js(`window.__opened = []; window.open = (u) => { window.__opened.push(u); return {}; }`);
+}
 await type('dialog[open] [name=name]', 'Test Visitor');
 await type('dialog[open] [name=phone]', '9876543210');
 await js(`document.querySelector('dialog[open] [name=consent]').click()`);
@@ -87,6 +90,12 @@ await wait(1200);
 const text = await js(`document.querySelector('dialog[open]').innerText`);
 if (expect === 'unconfigured') {
   check('no false success without backend', !text.includes('Thank you') && text.includes('Your details have not been sent'));
+} else if (expect === 'whatsapp') {
+  const opened = await js('window.__opened');
+  const msg = opened?.[0] ? decodeURIComponent(opened[0].split('?text=')[1] ?? '') : '';
+  check('WhatsApp opened with studio number', opened?.length === 1 && opened[0].startsWith(`https://wa.me/${process.env.E2E_WA ?? ''}?text=`), opened?.[0]?.slice(0, 40));
+  check('WhatsApp message prefilled with enquiry', msg.includes('*Bridal Makeup*') && msg.includes('Name: Test Visitor') && msg.includes('Phone: 9876543210') && !msg.includes('Email:'), JSON.stringify(msg.slice(0, 80)));
+  check('honest WhatsApp status (asks user to tap Send)', text.includes('Tap Send in WhatsApp') && !text.includes('Thank you'));
 } else if (expect === 'success') {
   check('success shown after backend 2xx', text.includes('Your enquiry has been received'));
 } else {
