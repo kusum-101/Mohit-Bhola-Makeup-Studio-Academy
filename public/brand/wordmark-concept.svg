@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96">
+  <!-- PROPOSED CONCEPT wordmark for Mohit Bhola Makeup Studio & Academy.
+       No official logo could be sourced; not to be used as the official identity until approved by the owner. -->
+  <g fill="none" stroke="#c39a5c">
+    <circle cx="48" cy="48" r="40" stroke-width="1.5"/>
+    <circle cx="48" cy="48" r="34" stroke-width="0.75" opacity="0.5"/>
+  </g>
+  <text x="48" y="60" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-style="italic" font-size="36" fill="#c39a5c">MB</text>
+  <text x="106" y="52" font-family="'Cormorant Garamond', Georgia, serif" font-style="italic" font-size="44" fill="#2b1420">Mohit Bhola</text>
+  <text x="108" y="76" font-family="Manrope, Arial, sans-serif" font-weight="600" font-size="11" letter-spacing="4.2" fill="#6e1d3b">MAKEUP STUDIO &amp; ACADEMY</text>
+</svg>

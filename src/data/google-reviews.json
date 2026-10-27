@@ -1,0 +1,9 @@
+{
+  "status": "unverified",
+  "note": "Google rating, review count and excerpts could not be verified from permitted public data during the build. Run `npm run reviews:fetch` with a Google Places API key to populate this file with genuine data.",
+  "source": "https://maps.app.goo.gl/qdrLcg74DCBFLMgX6",
+  "fetchedAt": null,
+  "rating": null,
+  "userRatingCount": null,
+  "reviews": []
+}
