@@ -101,7 +101,7 @@ export function Contact() {
                 {links.tel && (
                   <div className="flex gap-4">
                     <dt className="text-gold-light"><PhoneIcon /><span className="sr-only">Phone</span></dt>
-                    <dd><a href={links.tel} className="text-white/80 hover:text-gold-light">{business.phone}</a></dd>
+                    <dd><a href={links.tel} className="text-white/80 hover:text-gold-light">{links.phoneDisplay}</a></dd>
                   </div>
                 )}
               </dl>

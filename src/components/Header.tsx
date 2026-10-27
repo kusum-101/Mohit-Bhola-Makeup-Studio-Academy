@@ -47,7 +47,7 @@ export function Header() {
             )}
             {links.tel && (
               <a href={links.tel} className="hidden items-center gap-1.5 hover:text-gold-light sm:flex">
-                <PhoneIcon width={14} height={14} /> {business.phone}
+                <PhoneIcon width={14} height={14} /> {links.phoneDisplay}
               </a>
             )}
             <a href={business.instagram.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-gold-light">

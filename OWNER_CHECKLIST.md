@@ -15,16 +15,16 @@ Please confirm or correct each item before the site goes live. Items marked ⛔ 
 - [ ] Do you offer on-location / destination bridal makeup? (Currently **not** claimed)
 - [ ] The bridal process steps (Consultation → Look design → Skin prep → Wedding-day finish) match how you work
 
-## 3. Contact details (hidden until set in `.env`)
-- [ ] ⛔ WhatsApp number → `VITE_WHATSAPP_NUMBER`
-- [ ] Phone number → `VITE_PHONE`
+## 3. Contact details
+- [ ] ⛔ Confirm **+91 99712 60049** (supplied 27 Oct 2026) is the studio’s WhatsApp number, since all website enquiries go there
+- [ ] Confirm **+91 99712 60049** is also the right number for calls
 - [ ] Email → `VITE_EMAIL`
 - [ ] ⛔ Full street address → `VITE_STREET_ADDRESS`, `VITE_POSTAL_CODE` (map pin already matches your Google listing)
 - [ ] ⛔ Opening hours → `VITE_OPENING_HOURS`
 
 ## 4. Enquiry form
-- [ ] ⛔ Choose where enquiries go: Formspree/Getform (free tiers exist) or your own endpoint → `VITE_ENQUIRY_ENDPOINT`. Until then the form **does not send** and tells visitors so.
-- [ ] Email/phone that should receive enquiries
+- [ ] Enquiries open WhatsApp to **+91 99712 60049** with the visitor's details prefilled. Confirm someone checks this WhatsApp regularly.
+- [ ] Optional: also collect enquiries by email (Formspree/Getform → `VITE_ENQUIRY_ENDPOINT`). This is only used if the WhatsApp number is removed.
 
 ## 5. Google reviews
 - [ ] ⛔ Provide a Google Places API key (or let your developer set one up) so the genuine rating, review count and excerpts can be fetched: `npm run reviews:fetch`.

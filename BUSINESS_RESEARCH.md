@@ -21,7 +21,7 @@ Anything marked **Unverified** is either left out of the site or shown only thro
 |---|---|---|
 | **Google rating & review count** | Maps renders this client-side, so it isn't in the public HTML. Fetching Google's internal endpoints was blocked as access circumvention, which is correct, so it wasn't attempted again. | Reviews section shows **clearly labelled placeholders** and a "Read reviews" link to the real listing. No rating is shown and none is in the JSON-LD. `npm run reviews:fetch` (official Places API) fills in genuine data. |
 | **Review excerpts** | Same as above | Same as above. No reviews were written or paraphrased. |
-| **Phone / WhatsApp number** | Not found on any accessible public page | WhatsApp and phone buttons render **only** when `VITE_WHATSAPP_NUMBER` / `VITE_PHONE` are set. Until then the fallback is Instagram DM. |
+| **Phone / WhatsApp number** | Not on any accessible public page; **supplied by the client on 27 Oct 2026: 099712 60049** | Used for the call link, WhatsApp buttons and WhatsApp enquiries (`src/data/business.ts`). The owner should confirm it is the studio’s WhatsApp number. |
 | **Street address** | Not in public HTML | Shows "Ghaziabad, Uttar Pradesh" plus pin-accurate **Get directions**. `VITE_STREET_ADDRESS` adds the full line. |
 | **Opening hours** | Not in public HTML | Shows "Hours on request – check current timings on Google". `VITE_OPENING_HOURS` adds a table. |
 | **Official logo** | Instagram requires login, so the profile picture and bio couldn't be read. No other web presence found. | A **proposed concept** wordmark and "MB" monogram (`src/components/Wordmark.tsx`, `public/brand/wordmark-concept.svg`, `public/favicon.svg`). Each is commented as a concept, to be replaced. |

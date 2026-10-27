@@ -35,9 +35,10 @@ export const business = {
     url: 'https://www.instagram.com/muamohit_bhola/',
   },
 
-  // Unverified – supplied by owner via env. Links/buttons only render when present.
-  phone: clean(env.VITE_PHONE), // E.164, e.g. +919XXXXXXXXX
-  whatsapp: clean(env.VITE_WHATSAPP_NUMBER), // digits only incl. country code, e.g. 919XXXXXXXXX
+  // Supplied by the client on 27 Oct 2026 (09971260049) as the studio's phone/WhatsApp.
+  // Env values override these defaults.
+  phone: clean(env.VITE_PHONE) ?? '+919971260049', // E.164
+  whatsapp: clean(env.VITE_WHATSAPP_NUMBER) ?? '919971260049', // digits only incl. country code
   email: clean(env.VITE_EMAIL),
   // Opening hours were not readable from the public listing. Owner to confirm.
   // Format: [["Mon–Sat", "11:00 AM – 8:00 PM"], ["Sun", "By appointment"]]
@@ -65,6 +66,8 @@ export const links = {
       )}`
     : null,
   tel: business.phone ? `tel:${business.phone}` : null,
+  // "+919971260049" → "+91 99712 60049"
+  phoneDisplay: business.phone?.replace(/^\+91(\d{5})(\d{5})$/, '+91 $1 $2') ?? null,
   mailto: business.email ? `mailto:${business.email}` : null,
 };
 
